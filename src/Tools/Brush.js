@@ -1,4 +1,4 @@
-import Tool from "./Tool"
+import Tool from './Tool'
 
 class Brush extends Tool {
 	constructor(canvas) {
@@ -12,7 +12,7 @@ class Brush extends Tool {
 		this.canvas.onmouseup = this.mouseUpHandler.bind(this)
 	}
 
-	mouseUpHandler(e) {
+	mouseUpHandler() {
 		this.mouseDown = false
 	}
 

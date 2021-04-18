@@ -1,4 +1,4 @@
-import Tool from "./Tool"
+import Tool from './Tool'
 
 class Rect extends Tool{
 	constructor(canvas) {
@@ -12,7 +12,7 @@ class Rect extends Tool{
 		this.canvas.onmouseup = this.mouseUpHandler.bind(this)
 	}
 
-	mouseUpHandler(e) {
+	mouseUpHandler() {
 		this.mouseDown = false
 	}
 
@@ -44,7 +44,7 @@ class Rect extends Tool{
 		)
 	}
 
-	draw (drawProps) {
+	draw (...drawProps) {
 		const img = new Image()
 		img.src = this.saved
 		img.onload = () => {

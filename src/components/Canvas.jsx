@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
-import { observer } from "mobx-react-lite"
-import canvasState from "../store/canvasState"
-import toolState from "../store/toolState"
+import { observer } from 'mobx-react-lite'
+import canvasState from '../store/canvasState'
+import toolState from '../store/toolState'
 import Brush from '../Tools/Brush'
 import '../styles/canvas.scss'
 

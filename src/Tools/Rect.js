@@ -1,6 +1,7 @@
 import Tool from './Tool'
+import { ImageLoad } from '../helpers/Image'
 
-class Rect extends Tool{
+class Rect extends Tool {
 	constructor(canvas) {
 		super(canvas)
 		this.listen()
@@ -18,12 +19,9 @@ class Rect extends Tool{
 
 	mouseDownHandler(e) {
 		this.mouseDown = true
-		this.ctx.beginPath(
-			e.pageX - e.target.offsetLeft,
-			e.pageY - e.target.offsetTop
-		)
-		this.startX = e.pageX - e.target.offsetLeft
-		this.startY = e.pageY - e.target.offsetTop
+		this.ctx.beginPath()
+		this.startX = this.calcX(e)
+		this.startY = this.calcY(e)
 		this.saved = this.canvas.toDataURL()
 	}
 
@@ -31,8 +29,8 @@ class Rect extends Tool{
 		if (!this.mouseDown) {
 			return
 		}
-		let currentX = e.pageX - e.target.offsetLeft
-		let currentY = e.pageY - e.target.offsetTop
+		let currentX = this.calcX(e)
+		let currentY = this.calcY(e)
 		let width = currentX - this.startX
 		let height = currentY - this.startY
 
@@ -45,17 +43,16 @@ class Rect extends Tool{
 	}
 
 	draw (...drawProps) {
-		const img = new Image()
-		img.src = this.saved
-		img.onload = () => {
-			const params = [0, 0, this.canvas.width, this.canvas.height]
-			this.ctx.clearRect(...params)
-			this.ctx.drawImage(img, ...params)
-			this.ctx.beginPath()
-			this.ctx.rect(...drawProps)
-			this.ctx.fill()
-			this.ctx.stroke()
-		}
+		ImageLoad(this.saved)
+			.then(img => {
+				const params = [0, 0, this.canvas.width, this.canvas.height]
+				this.ctx.clearRect(...params)
+				this.ctx.drawImage(img, ...params)
+				this.ctx.beginPath()
+				this.ctx.rect(...drawProps)
+				this.ctx.fill()
+				this.ctx.stroke()
+			})
 		this.ctx.rect(...drawProps)
 		this.ctx.fill()
 		this.ctx.stroke()

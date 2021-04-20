@@ -1,4 +1,5 @@
 import Tool from './Tool'
+import { ImageLoad } from '../helpers/Image'
 
 class Line extends Tool {
 	constructor(canvas) {
@@ -14,8 +15,8 @@ class Line extends Tool {
 
 	mouseDown (e) {
 		this.press = true
-		this.startX = e.pageX - e.target.offsetLeft
-		this.startY = e.pageY - e.target.offsetTop
+		this.startX = this.calcX(e)
+		this.startY = this.calcY(e)
 		this.ctx.beginPath()
 		this.ctx.moveTo(this.startX, this.startY)
 		this.saved = this.canvas.toDataURL()
@@ -27,24 +28,23 @@ class Line extends Tool {
 
 	mouseMove (e) {
 		if (this.press) {
-			const x = e.pageX - e.target.offsetLeft
-			const y = e.pageY - e.target.offsetTop
+			const x = this.calcX(e)
+			const y = this.calcY(e)
 			this.draw(x, y)
 		}
 	}
 
 	draw (x, y) {
-		const img = new Image()
-		img.src = this.saved
-		img.onload = () => {
-			const params = [0, 0, this.canvas.width, this.canvas.height]
-			this.ctx.clearRect(...params)
-			this.ctx.drawImage(img, ...params)
-			this.ctx.beginPath()
-			this.ctx.moveTo(this.startX, this.startY)
-			this.ctx.lineTo(x, y)
-			this.ctx.stroke()
-		}
+		ImageLoad(this.saved)
+			.then(img => {
+				const params = [0, 0, this.canvas.width, this.canvas.height]
+				this.ctx.clearRect(...params)
+				this.ctx.drawImage(img, ...params)
+				this.ctx.beginPath()
+				this.ctx.moveTo(this.startX, this.startY)
+				this.ctx.lineTo(x, y)
+				this.ctx.stroke()
+			})
 	}
 }
 

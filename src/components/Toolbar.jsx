@@ -44,10 +44,17 @@ const Toolbar = () => {
 			</button>
 			<input type="color" className={'toolbar__color-picker'}/>
 			<div className={'actions'}>
-				<button className="toolbar__btn" style={{ marginLeft: 'auto' }}>
+				<button
+					className="toolbar__btn"
+					style={{ marginLeft: 'auto' }}
+					onClick={() => canvasState.undo()}
+				>
 					<Undo/>
 				</button>
-				<button className="toolbar__btn">
+				<button
+					className="toolbar__btn"
+					onClick={() => canvasState.redo()}
+				>
 					<Redo/>
 				</button>
 				<button className="toolbar__btn">

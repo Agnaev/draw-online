@@ -1,4 +1,5 @@
 import Tool from './Tool'
+import {ImageLoad} from '../helpers/Image'
 
 class Circle extends Tool {
 	constructor(canvas) {
@@ -14,11 +15,10 @@ class Circle extends Tool {
 
 	mouseDownHandler(e) {
 		this.mouseDown = true
-		let canvasData = this.canvas.toDataURL()
 		this.ctx.beginPath()
-		this.startX = e.pageX-e.target.offsetLeft
-		this.startY = e.pageY-e.target.offsetTop
-		this.saved = canvasData
+		this.startX = this.calcX(e)
+		this.startY = this.calcY(e)
+		this.saved = this.canvas.toDataURL()
 	}
 
 	mouseUpHandler() {
@@ -29,8 +29,8 @@ class Circle extends Tool {
 		if(!this.mouseDown) {
 			return
 		}
-		let currentX = e.pageX - e.target.offsetLeft
-		let currentY = e.pageY - e.target.offsetTop
+		let currentX = this.calcX(e)
+		let currentY = this.calcY(e)
 		let width = currentX - this.startX
 		let height = currentY - this.startY
 		let radius = Math.sqrt(width ** 2 + height ** 2)
@@ -38,16 +38,16 @@ class Circle extends Tool {
 	}
 
 	draw(x, y, radius) {
-		const img = new Image()
-		img.src = this.saved
-		img.onload = () => {
-			this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height)
-			this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height)
-			this.ctx.beginPath()
-			this.ctx.arc(x, y, radius, 0, 2 * Math.PI)
-			this.ctx.fill()
-			this.ctx.stroke()
-		}
+		ImageLoad(this.saved)
+			.then(img => {
+				const params = [0,0, this.canvas.width, this.canvas.height]
+				this.ctx.clearRect(...params)
+				this.ctx.drawImage(img, ...params)
+				this.ctx.beginPath()
+				this.ctx.arc(x, y, radius, 0, 2 * Math.PI)
+				this.ctx.fill()
+				this.ctx.stroke()
+			})
 	}
 }
 

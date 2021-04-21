@@ -2,8 +2,8 @@ import Tool from './Tool'
 import { ImageLoad } from '../helpers/Image'
 
 class Rect extends Tool {
-	constructor(canvas) {
-		super(canvas)
+	constructor(...params) {
+		super(...params)
 		this.listen()
 	}
 
@@ -15,6 +15,20 @@ class Rect extends Tool {
 
 	mouseUpHandler() {
 		this.mouseDown = false
+		this.socket.send(
+			JSON.stringify({
+				method: 'draw',
+				id: this.id,
+				figure: {
+					type: 'rect',
+					x: this.startX,
+					y: this.startY,
+					width: this.width,
+					height: this.height,
+					color: this.ctx.fillStyle
+				}
+			})
+		)
 	}
 
 	mouseDownHandler(e) {
@@ -31,14 +45,14 @@ class Rect extends Tool {
 		}
 		let currentX = this.calcX(e)
 		let currentY = this.calcY(e)
-		let width = currentX - this.startX
-		let height = currentY - this.startY
+		this.width = currentX - this.startX
+		this.height = currentY - this.startY
 
 		this.draw(
 			this.startX,
 			this.startY,
-			width,
-			height
+			this.width,
+			this.height
 		)
 	}
 
@@ -56,6 +70,14 @@ class Rect extends Tool {
 		this.ctx.rect(...drawProps)
 		this.ctx.fill()
 		this.ctx.stroke()
+	}
+
+	static staticDraw (ctx, x, y, w, h, color) {
+		ctx.fillStyle = color
+		ctx.beginPath()
+		ctx.rect(x, y, w, h)
+		ctx.fill()
+		ctx.stroke()
 	}
 }
 

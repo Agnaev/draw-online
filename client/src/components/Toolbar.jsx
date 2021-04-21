@@ -22,7 +22,7 @@ import '../styles/toolbar.scss'
 
 const Toolbar = () => {
 	function setTool (Tool) {
-		toolState.setTool(new Tool(canvasState.canvas))
+		toolState.setTool(new Tool(canvasState.canvas, canvasState.socket, canvasState.sessionId))
 	}
 
 	return (
